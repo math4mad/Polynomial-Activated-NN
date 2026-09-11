@@ -85,7 +85,10 @@ def report(device: str = "cpu") -> None:
     for p in sorted(tr.RUNS.glob("*.json")):
         if "_smoke" in p.name:
             continue
-        rows.append(json.loads(p.read_text()))
+        r = json.loads(p.read_text())
+        if r.get("depth", 1) != 1:     # exp9 cells belong to exp9's report, not this one
+            continue
+        rows.append(r)
     if not rows:
         print("no recorded runs yet"); return
     band = json.loads(BAND_FILE.read_text())["adopted_band_pp"] if BAND_FILE.exists() else None

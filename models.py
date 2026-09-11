@@ -97,22 +97,39 @@ class PolynomialActivation(nn.Module):
 
 
 class MLP(nn.Module):
-    """784 -> h -> 10; activation = ReLU or one of the poly arms."""
+    """784 -> [h -> h] x (depth-1) -> h -> 10 plain stack; activation = ReLU or poly arm.
 
-    def __init__(self, hidden: int = 128, activation: str = "relu", degree: int = 4):
+    depth = number of hidden layers (no BN, no residual — exp9 pre-reg §1).
+    """
+
+    def __init__(self, hidden: int = 128, activation: str = "relu", degree: int = 4,
+                 depth: int = 1):
         super().__init__()
-        self.fc1 = nn.Linear(784, hidden)          # PyTorch default init, all arms
-        if activation == "relu":
-            self.act: nn.Module = nn.ReLU()
-        elif activation in KINDS:
-            self.act = PolynomialActivation(activation, hidden, degree,
-                                            squash=(activation == "jacobi"))
-        else:
-            raise ValueError(activation)
-        self.fc2 = nn.Linear(hidden, 10)
+        assert depth >= 1
+        self.depth = depth
+        self.fc_in = nn.Linear(784, hidden)
+        self.act_in: nn.Module = _make_act(activation, hidden, degree)
+        self.mid = nn.ModuleList()
+        self.mid_acts = nn.ModuleList()
+        for _ in range(depth - 1):
+            self.mid.append(nn.Linear(hidden, hidden))
+            self.mid_acts.append(_make_act(activation, hidden, degree))
+        self.fc_out = nn.Linear(hidden, 10)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.fc2(self.act(self.fc1(x)))
+        z = self.act_in(self.fc_in(x))
+        for lin, act in zip(self.mid, self.mid_acts):
+            z = act(lin(z))
+        return self.fc_out(z)
+
+
+def _make_act(activation: str, hidden: int, degree: int) -> nn.Module:
+    if activation == "relu":
+        return nn.ReLU()
+    if activation in KINDS:
+        return PolynomialActivation(activation, hidden, degree,
+                                    squash=(activation == "jacobi"))
+    raise ValueError(activation)
 
 
 # --------------------------------------------------------------------------- #
@@ -122,20 +139,27 @@ def n_params(model: nn.Module) -> int:
     return sum(p.numel() for p in model.parameters())
 
 
-def poly_total(hidden: int, degree: int, activation: str) -> int:
-    per_neuron = degree + 1 if activation in KINDS else 0
-    extra = 2 if activation == "jacobi" else 0
-    return 784 * hidden + hidden + per_neuron * hidden + hidden * 10 + 10 + extra
+def relu_total(hidden: int, depth: int = 1) -> int:
+    """784h + h + (depth-1)(h^2 + h) + 10h + 10 (biases on every Linear)."""
+    return 784 * hidden + hidden + max(depth - 1, 0) * (hidden * hidden + hidden) + 10 * hidden + 10
 
 
-def matched_relu_width(hidden: int, degree: int, activation: str,
-                       grid=(64, 96, 128, 160, 192, 256, 320, 384, 512)) -> int:
+def poly_total(hidden: int, degree: int, activation: str, depth: int = 1) -> int:
+    per_neuron = (degree + 1) * depth if activation in KINDS else 0
+    extra = 2 * depth if activation == "jacobi" else 0     # (alpha, beta) per layer
+    return relu_total(hidden, depth) + per_neuron * hidden + extra
+
+
+def matched_relu_width(hidden: int, degree: int, activation: str, depth: int = 1,
+                       grid=None) -> int:
     """ReLU width whose total params is closest to the poly arm's; must be <= 1%
     or the comparison is refused — the bill may not be cooked silently."""
-    target = poly_total(hidden, degree, activation)
-    best = min(grid, key=lambda h: abs(795 * h + 10 - target))
-    rel = abs(795 * best + 10 - target) / target
+    if grid is None:   # step-2 grid: at L>=4 the coarse {64..512} grid cannot land inside 1%
+        grid = tuple(range(64, 513, 2))
+    target = poly_total(hidden, degree, activation, depth)
+    best = min(grid, key=lambda h: abs(relu_total(h, depth) - target))
+    rel = abs(relu_total(best, depth) - target) / target
     if rel > 0.01:
         raise ValueError(f"no ReLU width within 1% of {activation} h={hidden} d={degree} "
-                         f"(closest {best} at {rel:.2%}) — pre-register a new grid, do not fudge")
+                         f"L={depth} (closest {best} at {rel:.2%}) — pre-register a new grid, do not fudge")
     return best

@@ -33,12 +33,12 @@ SEEDS = [1000, 1001, 1002, 1003, 1004]      # pre-registered seed list
 ARM_ACT = {"relu": "relu", "jacobi": "jacobi", "hermite": "hermite", "cheby": "cheby"}
 
 
-def make_model(arm: str, hidden: int, degree: int) -> tuple[nn.Module, dict]:
+def make_model(arm: str, hidden: int, degree: int, depth: int = 1) -> tuple[nn.Module, dict]:
     """Build the arm; ReLU arm is width-MATCHED to the poly bill (demand 3)."""
     if arm == "relu":
-        h_relu = matched_relu_width(hidden, degree, "jacobi")  # jacobi = +2 over hermite/cheby: tightest
-        return MLP(h_relu, "relu"), {"relu_width": h_relu}
-    return MLP(hidden, ARM_ACT[arm], degree), {}
+        h_relu = matched_relu_width(hidden, degree, "jacobi", depth)  # jacobi billing is the tightest
+        return MLP(h_relu, "relu", degree, depth), {"relu_width": h_relu}
+    return MLP(hidden, ARM_ACT[arm], degree, depth), {}
 
 
 @torch.no_grad()
@@ -56,7 +56,8 @@ def evaluate(model: nn.Module, loader, device: torch.device) -> tuple[float, flo
 
 def run(arm: str, hidden: int = 128, degree: int = 4, seed: int = 1000,
         epochs: int = 20, smoke: bool = False, device: str = "auto",
-        lr: float = 1e-3, batch: int = 64, verbose: bool = True) -> dict:
+        lr: float = 1e-3, batch: int = 64, verbose: bool = True,
+        depth: int = 1, exp: str = "exp8") -> dict:
     dev = torch.device(device) if device != "auto" else \
         torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 
@@ -67,7 +68,7 @@ def run(arm: str, hidden: int = 128, degree: int = 4, seed: int = 1000,
     # re-shuffle with the run's own generator: data ORDER is per-seed, SPLIT is not
     train_dl.generator = g_data
 
-    model, meta = make_model(arm, hidden, degree)
+    model, meta = make_model(arm, hidden, degree, depth)
     model.to(dev)
     opt = torch.optim.Adam(model.parameters(), lr=lr)
     lossf = nn.CrossEntropyLoss()
@@ -109,24 +110,28 @@ def run(arm: str, hidden: int = 128, degree: int = 4, seed: int = 1000,
         scored = "test10k_canonical"
 
     act_info = {}
-    act = model.act
-    if hasattr(act, "coeffs"):
-        act_info = {
-            "alpha": None if act.alpha is None else float(act.alpha),
-            "beta": None if act.beta is None else float(act.beta),
-            "coeffs_mean": act.coeffs.data.mean(0).tolist(),   # per-degree, averaged over neurons
-            "coeffs_std": act.coeffs.data.std(0).tolist(),
-            "max_abs_act": float(act(torch.linspace(-5, 5, 401, device=dev).unsqueeze(1)
-                                      .repeat(1, hidden)).abs().max()),
-        }
+    acts = [model.act_in] + list(model.mid_acts)
+    if hasattr(acts[0], "coeffs"):
+        layers = []
+        for a in acts:
+            layers.append({
+                "alpha": None if a.alpha is None else float(a.alpha),
+                "beta": None if a.beta is None else float(a.beta),
+                "coeffs_mean": a.coeffs.data.mean(0).tolist(),   # per-degree, over neurons
+                "coeffs_std": a.coeffs.data.std(0).tolist(),
+                "max_abs_act": float(a(torch.linspace(-5, 5, 401, device=dev).unsqueeze(1)
+                                     .repeat(1, hidden)).abs().max()),
+            })
+        act_info = {**layers[0], "layers": layers}   # layer-0 keys kept for exp8 readers
 
     result = {
-        "bench": "PolyNN", "experiment": "exp8",
+        "bench": "PolyNN",
+        "experiment": exp,
         "regime": "learned-unbounded-poly-activation / from-scratch",
-        "arm": arm, "hidden": hidden, "degree": degree, "seed": seed,
+        "arm": arm, "hidden": hidden, "degree": degree, "seed": seed, "depth": depth,
         "epochs": epochs, "lr": lr, "batch": batch, "smoke": smoke,
         "scored_on": scored, "final_loss": loss, "final_acc": acc,
-        "params": n_params(model), "poly_total_formula": poly_total(hidden, degree, arm if arm != "relu" else "jacobi"),
+        "params": n_params(model), "poly_total_formula": poly_total(hidden, degree, arm if arm != "relu" else "jacobi", depth),
         **meta,
         "diverged": any(r.get("status") == "diverged" for r in history),
         "total_s": round(total_s, 1), "secs_per_epoch": round(total_s / max(len(history), 1), 2),
@@ -140,7 +145,9 @@ def run(arm: str, hidden: int = 128, degree: int = 4, seed: int = 1000,
 
 def save(result: dict, outdir: Path = RUNS) -> Path:
     outdir.mkdir(parents=True, exist_ok=True)
-    tag = f"{result['arm']}_h{result['hidden']}_d{result['degree']}_s{result['seed']}"
+    tag = f"{result['arm']}_h{result['hidden']}_d{result['degree']}"
+    tag += f"_l{result.get('depth', 1)}" if result.get("depth", 1) > 1 else ""
+    tag += f"_s{result['seed']}"
     tag += "_smoke" if result["smoke"] else ""
     path = outdir / f"{tag}.json"
     path.write_text(json.dumps(result, indent=1))
@@ -155,13 +162,14 @@ if __name__ == "__main__":
     ap.add_argument("--seed", type=int, default=1000)
     ap.add_argument("--epochs", type=int, default=20)
     ap.add_argument("--smoke", action="store_true", help="score on val carve-out, never on test")
+    ap.add_argument("--depth", type=int, default=1, help="hidden layers (exp9)")
     ap.add_argument("--device", default="auto")
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--batch", type=int, default=64)
     args = ap.parse_args()
 
     res = run(args.arm, args.hidden, args.degree, args.seed, args.epochs,
-              args.smoke, args.device, args.lr, args.batch)
+              args.smoke, args.device, args.lr, args.batch, depth=args.depth)
     p = save(res)
-    print(f"[{args.arm} h={args.hidden} s={args.seed}] acc={res['final_acc']:.4f} "
+    print(f"[{args.arm} L={args.depth} h={args.hidden} s={args.seed}] acc={res['final_acc']:.4f} "
           f"params={res['params']} {res['total_s']}s -> {p.name}")

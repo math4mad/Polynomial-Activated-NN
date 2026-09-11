@@ -35,8 +35,8 @@ def recurrence_coeffs(N: int, alpha: torch.Tensor, beta: torch.Tensor):
     """a_n = sqrt(lam_{n+1}) (n=0..N-1) and b_n (n=0..N-1) of the orthonormal recurrence."""
     dtype, device = alpha.dtype, alpha.device
     ab = alpha + beta
-    if float(ab) <= -2 + 1e-12:  # outside the admissible range
-        raise ValueError(f"need alpha+beta > -2 (got {float(ab)})")
+    if bool((ab.detach() + 2 - 1e-12 <= 0)):  # outside the admissible range
+        raise ValueError(f"need alpha+beta > -2 (got {float(ab.detach())})")
 
     # lam_1 stored in cancelled form: the generic branch is 0/0 at n=1 when
     # alpha+beta+1=0 and autograd would poison d/dalpha through the discarded entry.
