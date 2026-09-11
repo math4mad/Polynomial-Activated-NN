@@ -3,9 +3,7 @@ title: "PolyNN: the shape knob, worn inside the neuron"
 subtitle: "Learnable orthogonal-polynomial activations vs ReLU on Fashion-MNIST — CHORA bench 4"
 ---
 
-:::{callout-title="One paragraph"}
-::
-
+::: {.callout-note title="One paragraph"}
 CHORA studies one object, $\Delta=\sum_n c_n\phi_n$, under three knobs: **size**
 (depth/rank — dominates), **spectrum** ($\lambda_n$ order — killed twice), and
 **shape** (the Jacobi pair $\alpha,\beta$ — this bench's territory). PolyNN takes
@@ -14,7 +12,6 @@ polynomial $\phi(x)=\sum_k c_k \hat P_k^{(\alpha,\beta)}(\tanh x)$ instead of Re
 ReLU is the network equivalent of a flat spectrum (infinite high-frequency energy
 at one kink); a bandlimited container is a *choice*, and "fewer parameters" is
 therefore a spectral claim — testable as one.
-
 :::
 
 ## Status
