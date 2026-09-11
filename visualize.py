@@ -115,6 +115,8 @@ def plots(shapes: dict) -> list[str]:
     hist = {}
     for p in sorted((ROOT / "runs").glob("*_h128_*.json")) if (ROOT / "runs").is_dir() else []:
         r = json.loads(p.read_text())
+        if r["smoke"]:      # engineering runs must not bend the recorded curves
+            continue
         hist.setdefault(r["arm"], []).append(r["history"])
     if hist:
         plt.figure(figsize=(7, 4))

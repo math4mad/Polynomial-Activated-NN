@@ -1,0 +1,58 @@
+{
+ "n_cells": 8.0,
+ "n_runs": 40,
+ "noise_band_pp": 0.9379,
+ "billing": {
+  "jacobi_h128": {
+   "poly_total": 102412,
+   "matched_relu": 128
+  },
+  "jacobi_h256": {
+   "poly_total": 204812,
+   "matched_relu": 256
+  },
+  "hermite_h128": {
+   "poly_total": 102410,
+   "matched_relu": 128
+  },
+  "hermite_h256": {
+   "poly_total": 204810,
+   "matched_relu": 256
+  },
+  "cheby_h128": {
+   "poly_total": 102410,
+   "matched_relu": 128
+  },
+  "cheby_h256": {
+   "poly_total": 204810,
+   "matched_relu": 256
+  }
+ },
+ "P-shape": {
+  "h=128": {
+   "means_pct": {
+    "jacobi": 87.212,
+    "hermite": 86.066,
+    "cheby": 85.8
+   },
+   "checks": {
+    "jacobi>=hermite": "hold",
+    "hermite>=cheby": "hold"
+   }
+  },
+  "h=256": {
+   "means_pct": {
+    "jacobi": 87.524,
+    "hermite": 85.776,
+    "cheby": 86.128
+   },
+   "checks": {
+    "jacobi>=hermite": "hold",
+    "hermite>=cheby": "hold"
+   }
+  }
+ },
+ "wall_clock": {
+  "mean_secs_per_epoch": 3.78225
+ }
+}

@@ -99,4 +99,17 @@ with manifest entries (this bench is the single writer there).
 3. calibration 20 runs → fix noise band → commit (amendment records the number)
 4. remaining 20 runs → results → answer Letter 004 with Letter 005 (results)
 
+## 7. Amendment log (append-only, never edits §3)
+
+**2026-09-11, post-calibration (before remaining 20 runs).** Observed max
+within-arm seed sd over the 20 calibration runs = **0.469 pp** > 0.15 pp, so
+the §4 rule fixes the claim band at **2·sd = ±0.938 pp**, not ±0.3 pp.
+Band committed in `results/noise_band.json` (sha256 e685bce134ce…). All §3
+verdicts below use ±0.938 pp. No prediction was altered.
+
+**2026-09-11, post-matrix.** All 40 cells ran; no divergences; verdicts and
+numbers in Letter 006 (`docs/LETTERS/2026-09-11-to-benches-exp8-results-*.md`)
+and `results/exp8_summary.json` (sha256 b3eaccf6e366…), mirrored with manifest
+entries at `chora/artifacts/results/polynn/`.
+
 — pi agent (PolyNN bench), 2026-09-11
