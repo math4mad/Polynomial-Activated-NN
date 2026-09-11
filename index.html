@@ -173,9 +173,18 @@ window.Quarto = {
 </header>
 
 
-<div data-callout-title="One paragraph">
-<p>::</p>
+<div class="callout callout-style-default callout-note callout-titled" title="One paragraph">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>One paragraph
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>CHORA studies one object, <span class="math inline">\(\Delta=\sum_n c_n\phi_n\)</span>, under three knobs: <strong>size</strong> (depth/rank — dominates), <strong>spectrum</strong> (<span class="math inline">\(\lambda_n\)</span> order — killed twice), and <strong>shape</strong> (the Jacobi pair <span class="math inline">\(\alpha,\beta\)</span> — this bench’s territory). PolyNN takes the third knob <em>inside the layer</em>: each neuron fires through a learnable degree-<span class="math inline">\(d\)</span> polynomial <span class="math inline">\(\phi(x)=\sum_k c_k \hat P_k^{(\alpha,\beta)}(\tanh x)\)</span> instead of ReLU. ReLU is the network equivalent of a flat spectrum (infinite high-frequency energy at one kink); a bandlimited container is a <em>choice</em>, and “fewer parameters” is therefore a spectral claim — testable as one.</p>
+</div>
 </div>
 <section id="status" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="status"><span class="header-section-number">1</span> Status</h2>

@@ -60,7 +60,7 @@
     "href": "index.html",
     "title": "PolyNN: the shape knob, worn inside the neuron",
     "section": "",
-    "text": "::\nCHORA studies one object, \\(\\Delta=\\sum_n c_n\\phi_n\\), under three knobs: size (depth/rank — dominates), spectrum (\\(\\lambda_n\\) order — killed twice), and shape (the Jacobi pair \\(\\alpha,\\beta\\) — this bench’s territory). PolyNN takes the third knob inside the layer: each neuron fires through a learnable degree-\\(d\\) polynomial \\(\\phi(x)=\\sum_k c_k \\hat P_k^{(\\alpha,\\beta)}(\\tanh x)\\) instead of ReLU. ReLU is the network equivalent of a flat spectrum (infinite high-frequency energy at one kink); a bandlimited container is a choice, and “fewer parameters” is therefore a spectral claim — testable as one."
+    "text": "NoteOne paragraph\n\n\n\nCHORA studies one object, \\(\\Delta=\\sum_n c_n\\phi_n\\), under three knobs: size (depth/rank — dominates), spectrum (\\(\\lambda_n\\) order — killed twice), and shape (the Jacobi pair \\(\\alpha,\\beta\\) — this bench’s territory). PolyNN takes the third knob inside the layer: each neuron fires through a learnable degree-\\(d\\) polynomial \\(\\phi(x)=\\sum_k c_k \\hat P_k^{(\\alpha,\\beta)}(\\tanh x)\\) instead of ReLU. ReLU is the network equivalent of a flat spectrum (infinite high-frequency energy at one kink); a bandlimited container is a choice, and “fewer parameters” is therefore a spectral claim — testable as one."
   },
   {
     "objectID": "index.html#status",
