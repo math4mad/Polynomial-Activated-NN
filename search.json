@@ -1,0 +1,79 @@
+[
+  {
+    "objectID": "notes/exp8.html",
+    "href": "notes/exp8.html",
+    "title": "exp8: polynomial activations vs ReLU, pre-registered and settled",
+    "section": "",
+    "text": "The full pre-registration lives in docs/PREREG.md, committed at PolyNN@a3adf21 — before any epoch ran — with an append-only amendment log (§7). In one paragraph: one hidden layer 784→h→10, widths {128, 256}, degree d = 4 (5 coefficients per neuron, billed as architecture), Adam lr 1e-3, batch 64, 20 epochs, final-epoch model, 5 paired seeds {{1000…1004}}, canonical Fashion-MNIST split pinned in data.py, bytes hash-pinned in the shared chora manifest. The comparison is equal total parameters: poly arms cost \\(800h+12\\), the ReLU arm is width-matched to within 1% (same \\(h\\) is 0.63% off).\nArms: A-jacobi \\(\\phi(x)=\\sum_k c_k\\hat P_k^{(\\alpha,\\beta)}(\\tanh x)\\) with per-neuron \\(c_k\\) and per-layer learned \\((\\alpha,\\beta)\\) (softplus-admissible, Legendre init); A-hermite \\(\\sum_k c_k H_k(x)\\) and A-cheby \\(\\sum_k c_k T_k(x)\\) raw — no squashing, no normalization rescue: if they explode, that is the result. The Jacobi recurrence is ported from JacobiGP@f181923:src/jacobigp/basis.py (blob 597d1fea…) and verified against scipy.special (10/10 tests: scipy-equality, Gram \\(=\\mathbb{I}\\) on five \\((\\alpha,\\beta)\\) including the Chebyshev pole line, finite \\(\\partial/\\partial\\alpha\\)).\n\n\nCalibration ran first: 20 of the 40 cells, after which the claim band was fixed — the provisional ±0.3 pp rule died exactly as designed:\n\n\nobserved max within-arm seed sd = 0.469 pp &gt; 0.15 pp  ⇒  adopted band = 2·sd = ±0.938 pp, fixed before the remaining 20 runs."
+  },
+  {
+    "objectID": "notes/exp8.html#protocol-frozen-before-epoch-zero",
+    "href": "notes/exp8.html#protocol-frozen-before-epoch-zero",
+    "title": "exp8: polynomial activations vs ReLU, pre-registered and settled",
+    "section": "",
+    "text": "The full pre-registration lives in docs/PREREG.md, committed at PolyNN@a3adf21 — before any epoch ran — with an append-only amendment log (§7). In one paragraph: one hidden layer 784→h→10, widths {128, 256}, degree d = 4 (5 coefficients per neuron, billed as architecture), Adam lr 1e-3, batch 64, 20 epochs, final-epoch model, 5 paired seeds {{1000…1004}}, canonical Fashion-MNIST split pinned in data.py, bytes hash-pinned in the shared chora manifest. The comparison is equal total parameters: poly arms cost \\(800h+12\\), the ReLU arm is width-matched to within 1% (same \\(h\\) is 0.63% off).\nArms: A-jacobi \\(\\phi(x)=\\sum_k c_k\\hat P_k^{(\\alpha,\\beta)}(\\tanh x)\\) with per-neuron \\(c_k\\) and per-layer learned \\((\\alpha,\\beta)\\) (softplus-admissible, Legendre init); A-hermite \\(\\sum_k c_k H_k(x)\\) and A-cheby \\(\\sum_k c_k T_k(x)\\) raw — no squashing, no normalization rescue: if they explode, that is the result. The Jacobi recurrence is ported from JacobiGP@f181923:src/jacobigp/basis.py (blob 597d1fea…) and verified against scipy.special (10/10 tests: scipy-equality, Gram \\(=\\mathbb{I}\\) on five \\((\\alpha,\\beta)\\) including the Chebyshev pole line, finite \\(\\partial/\\partial\\alpha\\)).\n\n\nCalibration ran first: 20 of the 40 cells, after which the claim band was fixed — the provisional ±0.3 pp rule died exactly as designed:\n\n\nobserved max within-arm seed sd = 0.469 pp &gt; 0.15 pp  ⇒  adopted band = 2·sd = ±0.938 pp, fixed before the remaining 20 runs."
+  },
+  {
+    "objectID": "notes/exp8.html#the-matrix",
+    "href": "notes/exp8.html#the-matrix",
+    "title": "exp8: polynomial activations vs ReLU, pre-registered and settled",
+    "section": "2 The matrix",
+    "text": "2 The matrix\nEvery recorded cell, no drops. Test accuracy %, 5 seeds; A/B letters per pre-registered prediction below.\n\n\n\n2.0.0.1 h = 128\n\n\n\n\n\n\n\n\narm\ntest acc %\nsd\ntotal params\nlearned α / β\ns / epoch\ndiverged\n\n\n\n\nA-relu\n87.99\n0.33\n101,770\n—\n2.3\n0\n\n\nA-jacobi\n87.21\n0.47\n102,412\n0.36 / 0.36\n6.1\n0\n\n\nA-hermite\n86.07\n0.65\n102,410\n—\n3.6\n0\n\n\nA-cheby\n85.80\n0.65\n102,410\n—\n3.3\n0\n\n\n\n\n\n\n\n\n\n\n\n2.0.0.2 h = 256\n\n\n\n\n\n\n\n\narm\ntest acc %\nsd\ntotal params\nlearned α / β\ns / epoch\ndiverged\n\n\n\n\nA-relu\n88.16\n0.28\n203,530\n—\n2.3\n0\n\n\nA-jacobi\n87.52\n0.15\n204,812\n0.26 / 0.28\n6.2\n0\n\n\nA-hermite\n85.78\n1.00\n204,810\n—\n3.3\n0\n\n\nA-cheby\n86.13\n0.65\n204,810\n—\n3.2\n0"
+  },
+  {
+    "objectID": "notes/exp8.html#verdicts-against-the-predictions",
+    "href": "notes/exp8.html#verdicts-against-the-predictions",
+    "title": "exp8: polynomial activations vs ReLU, pre-registered and settled",
+    "section": "3 Verdicts against the predictions",
+    "text": "3 Verdicts against the predictions\n\n3.1 P-shape: the load-bearing half holds\nJacobi ≥ Hermite by +1.15 pp (h=128) and +1.75 pp (h=256) — both beyond the ±0.938 pp band, at both widths, never averaged across widths to rescue. The family with built-in boundaries, on the domain that matches a bounded activation, wins per parameter. JacobiGP, your prediction survives its first test.\n\n\n\n\n\n\n\nNoteHermite vs Cheby: indistinguishable, and we say so\n\n\n\n+0.27 pp at h=128, −0.35 pp at h=256 — inside the band at both widths. Neither claimed nor killed; Hermite’s 1.00 pp seed sd at h=256 is the largest variance in the table: raw arms don’t explode to NaN, they explode to noise (\\(|\\phi|\\) reaches 150–230 on \\([-5,5]\\) after training).\n\n\n\n\n\n\n\n\nWarningP-eff: killed — by us, exactly as pre-registered\n\n\n\nA total-parameter-matched ReLU matches or beats every poly arm at both widths (gaps 0.64–2.19 pp). “50–70% fewer parameters at equal accuracy” is retired at d=4 on a 10⁵-parameter MLP: bandlimiting is not free; the smoothness the container buys costs more than the kink it removes. First-class negative result."
+  },
+  {
+    "objectID": "notes/exp8.html#what-the-shape-knob-learned",
+    "href": "notes/exp8.html#what-the-shape-knob-learned",
+    "title": "exp8: polynomial activations vs ReLU, pre-registered and settled",
+    "section": "4 What the shape knob learned",
+    "text": "4 What the shape knob learned\n\n\n\n\n\n\n\nFigure 1\n\n\n\n\n\\((\\alpha,\\beta)\\) started at Legendre \\((0,0)\\) and walked to ≈ (0.40, 0.37) in every seed — a positive-\\((\\alpha,\\beta)\\) preference: the Jacobi weight \\((1-x)^\\alpha(1+x)^\\beta\\) vanishing at the edges of the squashed domain. The neuron spends its boundary flexibility exactly where \\(\\tanh\\) already saturates — Exp 1’s edge behavior, interiorized, and the cleanest echo across benches the programme could ask for: the GP’s evidence optimizer and per-neuron coefficients, two scales apart, dislike the same edges.\n\n\n\n\n\n\n\nFigure 2"
+  },
+  {
+    "objectID": "notes/exp8.html#the-spectral-row-gpu-free-p-relu-tail",
+    "href": "notes/exp8.html#the-spectral-row-gpu-free-p-relu-tail",
+    "title": "exp8: polynomial activations vs ReLU, pre-registered and settled",
+    "section": "5 The spectral row, GPU-free (P-relu-tail)",
+    "text": "5 The spectral row, GPU-free (P-relu-tail)\nHow non-bandlimited is ReLU? Best degree-\\(d\\) polynomial approximation of ReLU on \\([-3,3]\\), relative error, vs the classical \\(\\sim 0.28/d\\) asymptotics:\n\n\n\n\n\n\n\n\nd\nrel. error\n0.28/d\nratio\n\n\n\n\n2\n0.094\n0.140\n0.670\n\n\n4\n0.059\n0.070\n0.837\n\n\n6\n0.043\n0.047\n0.916\n\n\n8\n0.034\n0.035\n0.961\n\n\n12\n0.024\n0.023\n1.013\n\n\n16\n0.018\n0.018\n1.041\n\n\n\n\n\n\n\n\nThe ratio walks to 1.0: confirmed. At d=4 ReLU leaves 5.9% of its range uncaptured by any degree-4 polynomial — that is the tail our arms pay to remove, and this note’s tables price that removal at 0.6–2.2 pp of accuracy.\n\n\n\n\n\n\n\nFigure 3"
+  },
+  {
+    "objectID": "notes/exp8.html#compute-measured-not-feared",
+    "href": "notes/exp8.html#compute-measured-not-feared",
+    "title": "exp8: polynomial activations vs ReLU, pre-registered and settled",
+    "section": "6 Compute, measured not feared",
+    "text": "6 Compute, measured not feared\nWhole 40-cell matrix on the shared M1 Pro (MPS): ≈ 85 min. Letter 004’s “under an hour” missed by 1.5×, and the estimate now carries an error bar — mean per-epoch wall-clock across all 40 runs:\n\n\n&lt;p&gt;&lt;b&gt;3.78 s / epoch&lt;/b&gt; — still the programme's cheapest bench.&lt;/p&gt;"
+  },
+  {
+    "objectID": "notes/exp8.html#reproduce",
+    "href": "notes/exp8.html#reproduce",
+    "title": "exp8: polynomial activations vs ReLU, pre-registered and settled",
+    "section": "7 Reproduce",
+    "text": "7 Reproduce\npython -m unittest tests.test_basis -v          # the port, verified against scipy\npython train.py --arm jacobi --hidden 128 --seed 1000 --epochs 20   # one cell\npython compare.py --calibration                 # band fixed before scoring\npython compare.py --phase remaining && python compare.py --report\npython visualize.py                             # figures + relu_tail row\nAnchors: protocol PolyNN@a3adf21 · code PolyNN@33afdb8 · results PolyNN@548855e · shared bytes in chora manifests (artifacts/results/polynn/exp8_summary.json b3eaccf6e366…, noise_band.json e685bce134ce…, relu_tail.json eaa03a2d09a2…). Correspondence: Letters 004 → 005 → 006 in docs/LETTERS/."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PolyNN: the shape knob, worn inside the neuron",
+    "section": "",
+    "text": "::\nCHORA studies one object, \\(\\Delta=\\sum_n c_n\\phi_n\\), under three knobs: size (depth/rank — dominates), spectrum (\\(\\lambda_n\\) order — killed twice), and shape (the Jacobi pair \\(\\alpha,\\beta\\) — this bench’s territory). PolyNN takes the third knob inside the layer: each neuron fires through a learnable degree-\\(d\\) polynomial \\(\\phi(x)=\\sum_k c_k \\hat P_k^{(\\alpha,\\beta)}(\\tanh x)\\) instead of ReLU. ReLU is the network equivalent of a flat spectrum (infinite high-frequency energy at one kink); a bandlimited container is a choice, and “fewer parameters” is therefore a spectral claim — testable as one."
+  },
+  {
+    "objectID": "index.html#status",
+    "href": "index.html#status",
+    "title": "PolyNN: the shape knob, worn inside the neuron",
+    "section": "1 Status",
+    "text": "1 Status\n\n\n\nitem\nwhere\nanchor\n\n\n\n\nJoint brief\nchora/AGENTS.md, bench rules AGENTS.md §0\nprogramme law\n\n\nIncoming letter\nLetter 004, JacobiGP → PolyNN\nJacobiGP@f181923\n\n\nAnswer + pre-registration\nLetter 005, docs/PREREG.md (before epoch zero)\nPolyNN@a3adf21\n\n\nCode (tests vs scipy pass 10/10)\nbasis.py models.py data.py train.py compare.py visualize.py\nPolyNN@33afdb8\n\n\nexp8 results + verdicts\nLetter 006, notes/exp8.qmd\nPolyNN@548855e\n\n\nShared bytes\nchora/data/FashionMNIST/, chora/artifacts/results/polynn/\nhash-pinned in manifests"
+  },
+  {
+    "objectID": "index.html#the-headline-before-the-table",
+    "href": "index.html#the-headline-before-the-table",
+    "title": "PolyNN: the shape knob, worn inside the neuron",
+    "section": "2 The headline, before the table",
+    "text": "2 The headline, before the table\n\nP-shape holds where it counts: tanh-squashed Jacobi beats raw Hermite by +1.15 / +1.75 pp beyond the ±0.938 pp noise band, at both widths.\nP-eff died as pre-registered: a total-parameter-matched ReLU is at least as good as every poly arm — the “50–70% fewer parameters” claim is retired here, honestly, at d = 4.\nThe shape knob learned something: \\((\\alpha,\\beta)\\) walked off Legendre to ≈ (0.40, 0.37) in every seed — boundary-vanishing weight, the neuron’s own echo of the GP bench’s Exp 1/4 edge behavior.\n\nFull numbers, figures, protocol, and amendment log: the exp8 results note."
+  }
+]

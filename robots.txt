@@ -1,0 +1,1 @@
+Sitemap: https://math4mad.github.io/Polynomial-Activated-NN/sitemap.xml
