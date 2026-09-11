@@ -1,0 +1,35 @@
+project:
+  type: website
+  output-dir: docs          # git-ignored except docs/LETTERS & docs/PREREG.md; published via gh-pages
+  preview:
+    port: 4210
+  render:
+    - index.qmd
+    - notes/exp8.qmd
+
+website:
+  title: "PolyNN — shape inside the layer"
+  # GitHub Pages project sites serve under /<repo>/: absolute links must be prefixed.
+  site-url: https://math4mad.github.io/Polynomial-Activated-NN/
+  repo-url: https://github.com/math4mad/Polynomial-Activated-NN
+  repo-branch: gh-pages
+  navbar:
+    left:
+      - href: index.qmd
+        text: Overview
+      - href: notes/exp8.qmd
+        text: exp8 results note
+    right:
+      - icon: github
+        href: https://github.com/math4mad/Polynomial-Activated-NN
+  page-footer:
+    left: "© 2026 math4mad — CHORA programme, PolyNN bench"
+    right: "Fashion-MNIST © Xiao et al.; served from the shared chora store, hash-pinned."
+
+format:
+  html:
+    theme: cosmo
+    number-sections: true
+    toc-title: Contents
+    fig-align: center
+    code-overflow: wrap

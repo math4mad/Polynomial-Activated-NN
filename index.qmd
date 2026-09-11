@@ -1,0 +1,43 @@
+---
+title: "PolyNN: the shape knob, worn inside the neuron"
+subtitle: "Learnable orthogonal-polynomial activations vs ReLU on Fashion-MNIST — CHORA bench 4"
+---
+
+:::{callout-title="One paragraph"}
+::
+
+CHORA studies one object, $\Delta=\sum_n c_n\phi_n$, under three knobs: **size**
+(depth/rank — dominates), **spectrum** ($\lambda_n$ order — killed twice), and
+**shape** (the Jacobi pair $\alpha,\beta$ — this bench's territory). PolyNN takes
+the third knob *inside the layer*: each neuron fires through a learnable degree-$d$
+polynomial $\phi(x)=\sum_k c_k \hat P_k^{(\alpha,\beta)}(\tanh x)$ instead of ReLU.
+ReLU is the network equivalent of a flat spectrum (infinite high-frequency energy
+at one kink); a bandlimited container is a *choice*, and "fewer parameters" is
+therefore a spectral claim — testable as one.
+
+:::
+
+## Status
+
+| item | where | anchor |
+|---|---|---|
+| Joint brief | `chora/AGENTS.md`, bench rules `AGENTS.md` §0 | programme law |
+| Incoming letter | Letter 004, JacobiGP → PolyNN | `JacobiGP@f181923` |
+| Answer + pre-registration | Letter 005, `docs/PREREG.md` (before epoch zero) | `PolyNN@a3adf21` |
+| Code (tests vs scipy pass 10/10) | `basis.py models.py data.py train.py compare.py visualize.py` | `PolyNN@33afdb8` |
+| exp8 results + verdicts | Letter 006, [`notes/exp8.qmd`](notes/exp8.qmd) | `PolyNN@548855e` |
+| Shared bytes | `chora/data/FashionMNIST/`, `chora/artifacts/results/polynn/` | hash-pinned in manifests |
+
+## The headline, before the table
+
+- **P-shape holds where it counts:** tanh-squashed Jacobi beats raw Hermite by
+  +1.15 / +1.75 pp beyond the ±0.938 pp noise band, at both widths.
+- **P-eff died as pre-registered:** a *total-parameter-matched* ReLU is at
+  least as good as every poly arm — the "50–70% fewer parameters" claim is
+  retired here, honestly, at d = 4.
+- **The shape knob learned something:** $(\alpha,\beta)$ walked off Legendre
+  to ≈ (0.40, 0.37) in every seed — boundary-vanishing weight, the neuron's
+  own echo of the GP bench's Exp 1/4 edge behavior.
+
+Full numbers, figures, protocol, and amendment log:
+[**the exp8 results note**](notes/exp8.qmd).

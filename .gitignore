@@ -12,3 +12,13 @@ __pycache__/
 runs/
 *.pth
 *.pt
+
+# rendered Quarto site; the publication lives on the gh-pages branch,
+# but the letters and the pre-registration keep their docs/ home on main
+docs/*
+!docs/LETTERS
+!docs/PREREG.md
+.gh-pages-worktree/
+
+/.quarto/
+**/*.quarto_ipynb
