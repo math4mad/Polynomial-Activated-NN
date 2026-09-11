@@ -1,0 +1,8 @@
+great-tables==0.24.0
+matplotlib==3.11.1
+numpy==2.5.3
+polars==1.44.2
+polars-runtime-32==1.44.2
+scipy==1.18.1
+torch==2.14.0
+torchvision==0.29.0
