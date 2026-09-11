@@ -68,15 +68,15 @@ def calibration(epochs: int, device: str) -> None:
     sds = []
     for a in ARMS:
         acc = [r["final_acc"] * 100 for r in rows if r["arm"] == a]
-        sds.append(statistics.stdev(acc))
-    band = max(0.3, 2 * max(sds) * 100)
+        sds.append(statistics.stdev(acc))            # already percentage points
+    band = max(0.3, 2 * max(sds))
     RESULTS.mkdir(exist_ok=True)
     BAND_FILE.write_text(json.dumps({
-        "calibration_cells": "L=1 x 2 arms x 3 seeds", "max_seed_sd_pp": round(max(sds) * 100, 4),
+        "calibration_cells": "L=1 x 2 arms x 3 seeds", "max_seed_sd_pp": round(max(sds), 4),
         "adopted_band_pp": round(band, 4), "fixed_before_deep_cells": True,
     }, indent=1) + "\n")
     print(f"L={jacobi_width(1)}(j)/{matched_relu_width(jacobi_width(1),4,'jacobi',1)}(r) calibration: "
-          f"max sd {max(sds)*100:.3f}pp -> band ±{band:.3f}pp")
+          f"max sd {max(sds):.3f}pp -> band ±{band:.3f}pp")
 
 
 def deep(epochs: int, device: str) -> None:

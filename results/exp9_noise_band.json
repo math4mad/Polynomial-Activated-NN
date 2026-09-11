@@ -1,0 +1,6 @@
+{
+ "calibration_cells": "L=1 x 2 arms x 3 seeds",
+ "max_seed_sd_pp": 0.2108,
+ "adopted_band_pp": 0.4216,
+ "fixed_before_deep_cells": true
+}
