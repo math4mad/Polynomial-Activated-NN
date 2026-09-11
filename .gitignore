@@ -1,0 +1,14 @@
+# bytes live in the shared store, not in git (chora law 1)
+data
+.DS_Store
+**/.DS_Store
+
+# environments
+.venv/
+__pycache__/
+*.pyc
+
+# run outputs (manifest-hashed before mirroring to chora/artifacts/)
+runs/
+*.pth
+*.pt

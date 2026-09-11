@@ -1,5 +1,44 @@
 # Polynomial-Activated NN for Fashion-MNIST
 
+## 0. Cross-bench partnership (CHORA / ONE SPACE)
+
+This repo is the **PolyNN bench** of a joint programme; the workspace root is
+[`~/Programming/code-2026/chora`](../chora), with the other three benches
+symlinked under `chora/benches/` (`JacobiGP`, `MEF`, `Sarcos`). PolyNN is the
+programme's **third knob interiorized**: shape $(\alpha,\beta)$ lives in the
+nonlinearity each neuron applies (Letter 004, `benches/JacobiGP/docs/LETTERS/`).
+
+Rules for any agent working here (mirrored from
+`benches/JacobiGP/AGENTS.md` §0 and `chora/AGENTS.md`):
+
+1. **`benches/JacobiGP/docs/NEXT.md` is the single source of truth** for merged
+   claims (see its §2c for this bench). Read it before proposing anything about
+   the three-knob table; do not fork the joint idea into a new file.
+2. Sister benches are **read-only** from this checkout. Cite the commit SHA
+   behind any claim taken from them. Never push to another bench from a
+   session started here.
+3. Cross-repo communication is by **letter, committed in git**: answer in
+   `docs/LETTERS/YYYY-MM-DD-to-<repo>-<topic>.md`, dated, signed by role, with
+   claims anchored to SHAs. Letters are immutable once committed — answer with
+   a new one.
+4. **Shared bytes carry hashes.** Anything crossing benches (Fashion-MNIST in
+   `data/`, result artifacts mirrored to `chora/artifacts/`) needs a manifest
+   entry `{path, sha256, bytes, source, obtained, by: "repo@sha", script,
+   notes}` per `chora/schemas/manifest.schema.json`. A number consumed from
+   another bench must cite `(path, sha256)`.
+5. **Experiment discipline is programme law here:** **pre-register predictions
+   before any epoch runs** (see `docs/PREREG.md`); keep the learned-unbounded-
+   poly-activation regime as **its own row** — never share a table line with
+   post-hoc-truncation or frozen-base-increment studies; compare at **equal
+   total parameters**, billing the coefficient budget ($d{+}1$ params/neuron)
+   as part of the architecture; one hypothesis check per number; **never tune
+   on test**; negative results are first-class, never quietly dropped.
+6. This bench's experiment numbers: the Fashion-MNIST poly-vs-ReLU matrix is
+   **exp8** (reserved here; exp1–5 JacobiGP, exp6/7/7.5 joint, MEF stages and
+   Sarcos band/regime experiments live there).
+
+***
+
 我们在 **Fashion-MNIST** 这个小数据集上，用 PyTorch 实现一个**多项式激活函数神经网络**，并与传统 MLP 做对比。下面这个 `AGENT.md` 文件可以作为你的项目实施指南，放在项目根目录下即可。
 
 ***
