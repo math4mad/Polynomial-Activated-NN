@@ -89,7 +89,7 @@ def run(arm: str, hidden: int = 128, degree: int = 4, seed: int = 1000,
             opt.zero_grad()
             loss.backward()
             opt.step()
-            ep_loss += float(loss) * y.shape[0]
+            ep_loss += float(loss.detach()) * y.shape[0]
             ep_n += y.shape[0]
             steps += 1
         else:

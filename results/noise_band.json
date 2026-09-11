@@ -1,0 +1,7 @@
+{
+ "provisional_pp": 0.3,
+ "observed_max_seed_sd_pp": 0.469,
+ "adopted_band_pp": 0.9379,
+ "rule": "band = 0.3pp unless sd>0.15pp then 2*sd",
+ "fixed_before_remaining_runs": true
+}

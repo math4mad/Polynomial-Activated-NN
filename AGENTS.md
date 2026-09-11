@@ -178,9 +178,3 @@ test_dataset = torchvision.datasets.FashionMNIST(
 * PyTorch MPS 文档：[https://pytorch.org/docs/stable/notes/mps.html](https://pytorch.org/docs/stable/notes/mps.html)
 
 ***
-
-​
-
-​
-
-​
