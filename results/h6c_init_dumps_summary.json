@@ -1,0 +1,245 @@
+{
+ "kind": "h6c-init-dump-summary",
+ "generated_by": "h6c_dumps.py --summarize",
+ "coordinate": "u = tanh(z), z = the tensor entering the activation module (pre-activation)",
+ "domain": [
+  -1.0,
+  1.0
+ ],
+ "n_bins": 256,
+ "contrast_row_is_degenerate_at_init": {
+  "seeds_where_all_four_arm_histograms_are_integer-identical": [
+   1000,
+   1001,
+   1002,
+   1003,
+   1004
+  ],
+  "mechanism": "z = fc_in(x); at epoch 0 the activation module has not touched z, and fc_in is initialised from the same manual_seed stream in every arm (models.py) \u2014 so the four INIT measures are one measure",
+  "what_that_does_to_H6c": "the contrast row (A-relu/A-hermite/A-cheby) cannot disagree with A-jacobi in this coordinate, so Letter 017 debt two's 'all four arms predict it' falsifier is unfalsifiable as registered; reported as a finding, not repaired by an unregistered coordinate change",
+  "question_not_claim": "would a POST-activation init measure (phi_arm(z), same squashed domain) be the contrast Letter 017 meant? that is the Geometer's amendment to write, not B's run to invent"
+ },
+ "weights": "counts",
+ "arms": {
+  "cheby": {
+   "seeds": [
+    {
+     "seed": 1000,
+     "init_state_sha256": "8bcf14914018bb0ca11926962e7464d83b2107a3ba1701df90e10d3f795c0fb5",
+     "n_values": 7040000,
+     "u_mean": 0.02615310251712799,
+     "u_std": 0.3987039029598236,
+     "file": "runs/h6c_dump_cheby_h128_s1000.json"
+    },
+    {
+     "seed": 1001,
+     "init_state_sha256": "d6510a24ab9d881c51e660f88acc6868f59b9050dbfb2f58d271ac558d566f84",
+     "n_values": 7040000,
+     "u_mean": 0.0019320998108014464,
+     "u_std": 0.39545294642448425,
+     "file": "runs/h6c_dump_cheby_h128_s1001.json"
+    },
+    {
+     "seed": 1002,
+     "init_state_sha256": "226c1f964c3b718301ce368bb0bd8159f962630cbe5024cfd9403621a4760931",
+     "n_values": 7040000,
+     "u_mean": -0.005050770007073879,
+     "u_std": 0.40219563245773315,
+     "file": "runs/h6c_dump_cheby_h128_s1002.json"
+    },
+    {
+     "seed": 1003,
+     "init_state_sha256": "f4d1ce7fac87a92b3881878e28a6e82bf1a968cd652f46127917770a462324d4",
+     "n_values": 7040000,
+     "u_mean": 0.0005757849430665374,
+     "u_std": 0.3934212028980255,
+     "file": "runs/h6c_dump_cheby_h128_s1003.json"
+    },
+    {
+     "seed": 1004,
+     "init_state_sha256": "6a4d16ae47fb62e751d0d13a221b0aef40f9e80ace75aee7b445cd2982ad142a",
+     "n_values": 7040000,
+     "u_mean": -0.01048464048653841,
+     "u_std": 0.39972546696662903,
+     "file": "runs/h6c_dump_cheby_h128_s1004.json"
+    }
+   ],
+   "distinct_init_states": 5,
+   "primary_arm_for_H6c": false,
+   "role": "contrast row, NOT an extra check"
+  },
+  "hermite": {
+   "seeds": [
+    {
+     "seed": 1000,
+     "init_state_sha256": "347a1d3ec76dddf44dd5d063958c80bf56c481cdfcbfa88cbd1b6ec23e144f33",
+     "n_values": 7040000,
+     "u_mean": 0.02615310251712799,
+     "u_std": 0.3987039029598236,
+     "file": "runs/h6c_dump_hermite_h128_s1000.json"
+    },
+    {
+     "seed": 1001,
+     "init_state_sha256": "364836dc4b21583da8d97af101dcba10afac69df9bc6b1cd7446aaba4d07a7cb",
+     "n_values": 7040000,
+     "u_mean": 0.0019320998108014464,
+     "u_std": 0.39545294642448425,
+     "file": "runs/h6c_dump_hermite_h128_s1001.json"
+    },
+    {
+     "seed": 1002,
+     "init_state_sha256": "939a6c92fe872768633adf54ae8dbefc595120138768caf243d5d7d9808af07d",
+     "n_values": 7040000,
+     "u_mean": -0.005050770007073879,
+     "u_std": 0.40219563245773315,
+     "file": "runs/h6c_dump_hermite_h128_s1002.json"
+    },
+    {
+     "seed": 1003,
+     "init_state_sha256": "69211b21d0377032187f83c9b2408574ac481147f109daeeb7665c90ffaa38b6",
+     "n_values": 7040000,
+     "u_mean": 0.0005757849430665374,
+     "u_std": 0.3934212028980255,
+     "file": "runs/h6c_dump_hermite_h128_s1003.json"
+    },
+    {
+     "seed": 1004,
+     "init_state_sha256": "efd8132150e93cd794207b03fac6586544c0905600c86eefd0af0d0acbf7fe39",
+     "n_values": 7040000,
+     "u_mean": -0.01048464048653841,
+     "u_std": 0.39972546696662903,
+     "file": "runs/h6c_dump_hermite_h128_s1004.json"
+    }
+   ],
+   "distinct_init_states": 5,
+   "primary_arm_for_H6c": false,
+   "role": "contrast row, NOT an extra check"
+  },
+  "jacobi": {
+   "seeds": [
+    {
+     "seed": 1000,
+     "init_state_sha256": "fcaec3b54d286309ee5ae10d2d804d363aaeac8b639e9fa6261ac2ec347c016f",
+     "n_values": 7040000,
+     "u_mean": 0.02615310251712799,
+     "u_std": 0.3987039029598236,
+     "file": "runs/h6c_dump_jacobi_h128_s1000.json"
+    },
+    {
+     "seed": 1001,
+     "init_state_sha256": "26e734eaec5395f91546a65a8161671fd5980f9c781f1ae7e15868b9d1b2c0f1",
+     "n_values": 7040000,
+     "u_mean": 0.0019320998108014464,
+     "u_std": 0.39545294642448425,
+     "file": "runs/h6c_dump_jacobi_h128_s1001.json"
+    },
+    {
+     "seed": 1002,
+     "init_state_sha256": "172d4fb5d616ea3d6761011e7889a2c165df1ce33ebf252be7442485e156f045",
+     "n_values": 7040000,
+     "u_mean": -0.005050770007073879,
+     "u_std": 0.40219563245773315,
+     "file": "runs/h6c_dump_jacobi_h128_s1002.json"
+    },
+    {
+     "seed": 1003,
+     "init_state_sha256": "b012dc8636cc051269d0d9814d699f4fb8b0652fef6329779894e536988897f2",
+     "n_values": 7040000,
+     "u_mean": 0.0005757849430665374,
+     "u_std": 0.3934212028980255,
+     "file": "runs/h6c_dump_jacobi_h128_s1003.json"
+    },
+    {
+     "seed": 1004,
+     "init_state_sha256": "5f67f9671c8933a723d1b195063a9ccaa86d6ee8465387e7625359aeeb4973c4",
+     "n_values": 7040000,
+     "u_mean": -0.01048464048653841,
+     "u_std": 0.39972546696662903,
+     "file": "runs/h6c_dump_jacobi_h128_s1004.json"
+    }
+   ],
+   "distinct_init_states": 5,
+   "primary_arm_for_H6c": true,
+   "role": "primary \u2014 the arm that learned the pair (Letter 017 debt two)"
+  },
+  "relu": {
+   "seeds": [
+    {
+     "seed": 1000,
+     "init_state_sha256": "282f7045366880ab65130e566188f12ecd8dbba91825eac6290099c4e3109d09",
+     "n_values": 7040000,
+     "u_mean": 0.02615310251712799,
+     "u_std": 0.3987039029598236,
+     "file": "runs/h6c_dump_relu_h128_s1000.json"
+    },
+    {
+     "seed": 1001,
+     "init_state_sha256": "9722872fd2269fcedcf324f73ee50e34fbd1eb8ce7c5c0cd7b20ceb129550ea4",
+     "n_values": 7040000,
+     "u_mean": 0.0019320998108014464,
+     "u_std": 0.39545294642448425,
+     "file": "runs/h6c_dump_relu_h128_s1001.json"
+    },
+    {
+     "seed": 1002,
+     "init_state_sha256": "ca75b7ceecc4c5d3e2814f55798b3017e8c09c50f602f00dba5c99ed373fbf4e",
+     "n_values": 7040000,
+     "u_mean": -0.005050770007073879,
+     "u_std": 0.40219563245773315,
+     "file": "runs/h6c_dump_relu_h128_s1002.json"
+    },
+    {
+     "seed": 1003,
+     "init_state_sha256": "38fa7707e8f4bfb17a675b0841e2ef24adb393b4283ee44b50a4d9f2e10dce61",
+     "n_values": 7040000,
+     "u_mean": 0.0005757849430665374,
+     "u_std": 0.3934212028980255,
+     "file": "runs/h6c_dump_relu_h128_s1003.json"
+    },
+    {
+     "seed": 1004,
+     "init_state_sha256": "7666e10048fdc875630e178d8b9490e6306907b1d36796e0023457bb4a8b5bc8",
+     "n_values": 7040000,
+     "u_mean": -0.01048464048653841,
+     "u_std": 0.39972546696662903,
+     "file": "runs/h6c_dump_relu_h128_s1004.json"
+    }
+   ],
+   "distinct_init_states": 5,
+   "primary_arm_for_H6c": false,
+   "role": "contrast row, NOT an extra check"
+  }
+ },
+ "not_a_claim": "no evidence fit ran on these bytes here; the fit is JacobiGP's (PREREG_EXP6 H6c) and the verdict is its letter to carry",
+ "files": {
+  "h6c_dump_cheby_h128_s1000.json": "7b9e25093fd0b5eb35002f18c7fef064cf50f5fd6c313180b8dd74497ee01401",
+  "h6c_dump_cheby_h128_s1001.json": "db9ce226aec0e1deec3240b239ebc6dd40c6e4039ee4634bade5266675fe032b",
+  "h6c_dump_cheby_h128_s1002.json": "3e9d6df1350be5ddd9635f931813de55079b8778cb954aa6330c93087a173dd4",
+  "h6c_dump_cheby_h128_s1003.json": "d1df77ebb23c2302a7953b10ad587797fd3b9dc49b6d42206960dffeefc94c54",
+  "h6c_dump_cheby_h128_s1004.json": "4efdbfa380ec86cc3e5da6bfa7c73e0fc0887d9526c86091b996b0aa382ae9f3",
+  "h6c_dump_hermite_h128_s1000.json": "e06d07084456a628cfdeec2a0e1681e55832eb96b9db0538a2919c9b98eec7ae",
+  "h6c_dump_hermite_h128_s1001.json": "efc300c5d54ed0b926db41dc7ac360c8851b3a0a4f8111d2917eec31150c1293",
+  "h6c_dump_hermite_h128_s1002.json": "dfb5fd8792a3d5f6bed537ec9a6185712d500ba20bcd7be96411303658f48ae0",
+  "h6c_dump_hermite_h128_s1003.json": "b117a3bd47e46ef1a91ff4ed6fa6f15dc804110f520aa555627f1e2af5c2f577",
+  "h6c_dump_hermite_h128_s1004.json": "5aa6b0877d19c9b4f109a2d723ddf16e9c4e9a44a7ec05a4fe968fb0c33defc0",
+  "h6c_dump_jacobi_h128_s1000.json": "a7fd916d1475b1017db32548ff26008108e03833fc1861f667faa64b6ad26fab",
+  "h6c_dump_jacobi_h128_s1001.json": "2027ef54afaf3afe7c56f99dc8a841eee12010b80e09d0b83f3fcac5374f7be5",
+  "h6c_dump_jacobi_h128_s1002.json": "6a70a572db0acbfaf6e85a66c8eac9717a16b4fa7fc25ac704506d51d0ffd931",
+  "h6c_dump_jacobi_h128_s1003.json": "20eab7791fa57787f875744c7243913ade19821de36a791c75807f0567e9c57e",
+  "h6c_dump_jacobi_h128_s1004.json": "9acee5cdfc862fa9f23485b5f72fe0a3777e45ccd6873527693bf32eda674c49",
+  "h6c_dump_relu_h128_s1000.json": "ee159648e5ae12a32c5b632b8c2ee28860f1e573983c9e659ed1dd57c96d4823",
+  "h6c_dump_relu_h128_s1001.json": "5b29000ba9cf704e86a7f66957bea14d65a61848c2b5272faddafd7eab8ee8b1",
+  "h6c_dump_relu_h128_s1002.json": "59117126c1b8f62317aacea2a624b2409026fedd367973a220aa87b09429345c",
+  "h6c_dump_relu_h128_s1003.json": "b47bfad15721087f50c355a63a2d395d78c39ad3c8d63a5a0bfea6042b6b299b",
+  "h6c_dump_relu_h128_s1004.json": "bb04bc5489076d8a96b03e8a5b58302b038af6e9235c112ae5e9ba7bf2ed72bc"
+ },
+ "run_on": {
+  "machine": "m1-16g",
+  "host": "lunardeMacBook-Pro.local",
+  "bench": "B (worker bench)",
+  "torch": "2.14.0",
+  "numpy": "2.4.6",
+  "python": "3.11.16",
+  "device": "mps"
+ }
+}

@@ -33,6 +33,20 @@ SEEDS = [1000, 1001, 1002, 1003, 1004]      # pre-registered seed list
 ARM_ACT = {"relu": "relu", "jacobi": "jacobi", "hermite": "hermite", "cheby": "cheby"}
 
 
+def act_pair(model: nn.Module) -> dict:
+    """(alpha, beta) of every poly activation layer, read at this instant.
+
+    Added for H6c's per-seed walks (`h6c_dumps.py --walks`): a LOG, not a knob.
+    Nothing in the training loop consumes it, so the trajectory it describes is
+    the registered exp8 trajectory — the walk is the same run, witnessed.
+    ReLU arms have no exponents and report None.
+    """
+    acts = [model.act_in] + list(getattr(model, "mid_acts", []))
+    a = [None if getattr(x, "alpha", None) is None else float(x.alpha) for x in acts]
+    b = [None if getattr(x, "beta", None) is None else float(x.beta) for x in acts]
+    return {"alpha": a[0], "beta": b[0], "alpha_layers": a, "beta_layers": b}
+
+
 def make_model(arm: str, hidden: int, degree: int, depth: int = 1) -> tuple[nn.Module, dict]:
     """Build the arm; ReLU arm is width-MATCHED to the poly bill (demand 3)."""
     if arm == "relu":
@@ -57,7 +71,7 @@ def evaluate(model: nn.Module, loader, device: torch.device) -> tuple[float, flo
 def run(arm: str, hidden: int = 128, degree: int = 4, seed: int = 1000,
         epochs: int = 20, smoke: bool = False, device: str = "auto",
         lr: float = 1e-3, batch: int = 64, verbose: bool = True,
-        depth: int = 1, exp: str = "exp8") -> dict:
+        depth: int = 1, exp: str = "exp8", walk: bool = False) -> dict:
     dev = torch.device(device) if device != "auto" else \
         torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 
@@ -95,6 +109,8 @@ def run(arm: str, hidden: int = 128, degree: int = 4, seed: int = 1000,
             steps += 1
         else:
             row = {"epoch": ep, "loss": ep_loss / max(ep_n, 1), "epoch_s": round(time.perf_counter() - te, 2)}
+            if walk:
+                row.update(act_pair(model))          # log after the epoch's last step
             history.append(row)
             if verbose:
                 print(f"epoch {ep:2d} | loss {row['loss']:.4f} | {row['epoch_s']}s")
@@ -162,6 +178,8 @@ if __name__ == "__main__":
     ap.add_argument("--seed", type=int, default=1000)
     ap.add_argument("--epochs", type=int, default=20)
     ap.add_argument("--smoke", action="store_true", help="score on val carve-out, never on test")
+    ap.add_argument("--walk", action="store_true",
+                    help="log (alpha, beta) into every history row (H6c walks; a log, not a knob)")
     ap.add_argument("--depth", type=int, default=1, help="hidden layers (exp9)")
     ap.add_argument("--device", default="auto")
     ap.add_argument("--lr", type=float, default=1e-3)
@@ -169,7 +187,8 @@ if __name__ == "__main__":
     args = ap.parse_args()
 
     res = run(args.arm, args.hidden, args.degree, args.seed, args.epochs,
-              args.smoke, args.device, args.lr, args.batch, depth=args.depth)
+              args.smoke, args.device, args.lr, args.batch, depth=args.depth,
+              walk=args.walk)
     p = save(res)
     print(f"[{args.arm} L={args.depth} h={args.hidden} s={args.seed}] acc={res['final_acc']:.4f} "
           f"params={res['params']} {res['total_s']}s -> {p.name}")
